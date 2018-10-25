@@ -1,0 +1,88 @@
+import org.flywaydb.gradle.task.FlywayMigrateTask
+
+buildscript {
+    ext {
+        springBootVersion = '2.0.6.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "io.ebean:ebean-gradle-plugin:11.10.1"
+    }
+}
+
+plugins {
+    id 'io.franzbecker.gradle-lombok' version '1.13'
+    id "org.flywaydb.flyway" version "5.0.7"
+}
+
+def verGraphQl = '1.0.0'
+def ver = '1.0.0'
+def verSuffix = '-BETA'
+def description = "First add model"
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'io.ebean'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: "maven"
+
+group = 'com.gnt'
+version ver + verSuffix
+//sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven {
+        url "http://repo.gnt-global.com/artifactory/local-sbt-repository"
+    }
+}
+
+Properties localBootRunProperties(env = String) {
+    Properties p = new Properties()
+    p.load(new FileInputStream(
+            file(project.projectDir).absolutePath + "/src/main/resources/application-"+ env +".yml"))
+    return p
+}
+
+task generateSql(type: JavaExec) {
+    main = "com.gnt.flyway.DBMigration"
+    args(verGraphQl, description)
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+
+dependencies {
+    implementation('org.springframework.boot:spring-boot-starter-web')
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    compile group: 'io.ebean', name: 'ebean', version: '11.15.4'
+    compile group: 'io.ebean', name: 'ebean-spring-txn', version: '11.10.4'
+    compile("org.springframework.boot:spring-boot-starter-jdbc")
+    compile('mysql:mysql-connector-java')
+}
+
+flyway {
+    def properties = localBootRunProperties("dev")
+    def urlDb = properties.get("databaseUrl")
+    def usernameDb = properties.get("username")
+    def passwordDb = properties.get("password")
+    url = urlDb
+    user = usernameDb
+    password = passwordDb
+    placeholderReplacement = false
+}
+
+task flywayMigrateDev(type: FlywayMigrateTask) {
+    def properties = localBootRunProperties("dev")
+    def urlDb = properties.get("databaseUrl")
+    def usernameDb = properties.get("username")
+    def passwordDb = properties.get("password")
+    url = urlDb
+    user = usernameDb
+    password = passwordDb
+    placeholderReplacement = false
+}
+

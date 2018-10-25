@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE xml>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <createTable name="product" identityType="sequence" sequenceAllocate="50" pkName="pk_product">
+            <column name="id" type="bigint"/>
+            <column name="product_name" type="varchar"/>
+            <column name="price" type="bigint"/>
+        </createTable>
+    </changeSet>
+</migration>

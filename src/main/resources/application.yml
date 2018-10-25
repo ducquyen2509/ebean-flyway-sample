@@ -1,0 +1,9 @@
+server:
+      port: 9000
+
+datasource :
+    db :
+      username : devadm
+      password : Dev@123
+      databaseUrl : jdbc:mysql://localhost:3306/flyway_demo?useSSL=false&characterEncoding=UTF-8
+      databaseDriver : com.mysql.jdbc.Driver
