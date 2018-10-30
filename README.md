@@ -35,7 +35,9 @@
 ```
 
 ```java 
-    //  Define version and description increment when create models 
+    // Before running generate sql command must increase version graphql number 
+    // EX:  def verGraphQl = '1.0.0' to def verGraphQl = '1.0.1' 
+    // EX:  def description = "First add model" to def description = "Change model ..."
     def verGraphQl = '1.0.0'
     def description = "First add model"
 ```
@@ -86,16 +88,50 @@ We can create task for multiple environments setting
 ```
 ---
 # 3. How to run
-- Step 1: View version executed in DB
-    ```java
-        gradlew flywayInfo
-    ```
-- Step 2: Execute task create SQL Query
-    ``` java
+## a. Normal generate sql:
+- <b>Step 1: </b> View version executed in DB
+```java
+   gradlew flywayInfo
+```
+- <b> Step 2: </b>
+
+     Before running generate sql command must increase version graphql number <br/>
+     EX:  def verGraphQl = '1.0.0' to def verGraphQl = '1.0.1' <br/>
+     EX:  def description = "First add model" to def description = "Change model ..."
+     ```java
+     def verGraphQl = '1.0.0'
+     def description = "First add model"
+     ```
+- Step 3: Generate sql with command  
+  ``` java
         gradlew generateSql
     ```
-- Step 3: Execute task create table to DB
+- Step 3: Execute task create table to Migrate Sql from local to server DB
      ``` java
         gradlew flywayMigrateDev
     ```
+## b : Generate peding drop column name 
+
+- Step 1: Add generate peding drop to  class DBMigration
+```java
+     public static void main(String[] args) throws IOException {
+        System.setProperty("ddl.migration.generate", "true");
+        if (args.length > 0) {
+            System.setProperty("ddl.migration.version", args[0]);
+        }
+        if (args.length > 1) {
+            System.setProperty("ddl.migration.name", args[1]);
+        } else {
+            System.setProperty("ddl.migration.name", "Change model");
+        }
+        io.ebean.dbmigration.DbMigration dbMigration = io.ebean.dbmigration.DbMigration.create();
+        dbMigration.setPlatform(Platform.MYSQL);
+        dbMigration.setStrictMode(false);
+        // Add version pedding drop
+        dbMigration.setGeneratePendingDrop("V1.0.1__First_add_model.model.xml");
+        dbMigration.generateMigration();
+    }
+```
+- Step 2: Do all step in [## a. Normal generate sql](#a-normal-generate-sql)
+    
 ---
