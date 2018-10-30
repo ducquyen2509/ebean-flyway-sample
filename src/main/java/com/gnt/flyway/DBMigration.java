@@ -18,6 +18,7 @@ public class DBMigration {
         }
         io.ebean.dbmigration.DbMigration dbMigration = io.ebean.dbmigration.DbMigration.create();
         dbMigration.setPlatform(Platform.MYSQL);
+        // dbMigration.setGeneratePendingDrop("V1.0.1__First_add_model.model.xml");
         dbMigration.setStrictMode(false);
         dbMigration.generateMigration();
     }
