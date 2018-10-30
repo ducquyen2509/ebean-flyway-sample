@@ -58,7 +58,7 @@ task generateSql(type: JavaExec) {
 dependencies {
     implementation('org.springframework.boot:spring-boot-starter-web')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
-    compile group: 'io.ebean', name: 'ebean', version: '11.15.4'
+    compile group: 'io.ebean', name: 'ebean', version: '11.18.4'
     compile group: 'io.ebean', name: 'ebean-spring-txn', version: '11.10.4'
     compile("org.springframework.boot:spring-boot-starter-jdbc")
     compile('mysql:mysql-connector-java')
