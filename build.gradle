@@ -37,7 +37,7 @@ version ver + verSuffix
 repositories {
     mavenCentral()
     maven {
-        url "http://repo.gnt-global.com/artifactory/local-sbt-repository"
+        
     }
 }
 
